@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property>
+    <name>security.client.protocol.acl</name>
+    <value>* </value>
+  </property>
+  <property>
+    <name>security.client.datanode.protocol.acl</name>
+    <value>* </value>
+  </property>
+  <property>
+    <name>security.zkfc.protocol.acl</name>
+    <value>hdfs</value>
+  </property>
+  <property>
+    <name>security.datanode.protocol.acl</name>
+    <value>hdfs,ops_dev</value>
+  </property>
+  <property>
+    <name>security.refresh.policy.protocol.acl</name>
+    <value>* </value>
+  </property>
+  <property>
+    <name>security.ha.service.protocol.acl</name>
+    <value>* </value>
+  </property>
+</configuration>

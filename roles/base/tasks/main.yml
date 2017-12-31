@@ -1,0 +1,51 @@
+- name: Deploy yum repo
+  template: src={{ item }} dest=/etc/yum.repos.d/{{ item }}
+  with_items:
+    - cloudera-cdh5.repo
+    - cloudera-gplextras5.repo
+    - cloudera-manager.repo
+
+- name: Install hadoop base pkg
+  yum: name={{ item }} state=latest
+  with_items:
+      - oracle-j2sdk1.7
+      - parquet
+      - parquet-format
+      - sentry
+      - avro-libs
+      - bigtop-jsvc
+      - bigtop-utils
+      - bigtop-tomcat
+      - hadoop
+      - hadoop-hdfs
+      - hadoop-yarn
+      - hadoop-mapreduce
+      - hadoop-lzo
+      - flume-ng
+      - zookeeper
+      - hbase
+      - solr
+      - spark-core
+      - hive
+      - impala
+      - kite
+
+- name: Copy jar for kerberos
+  synchronize: src={{ item }} dest=/usr/java/jdk1.7.0_67-cloudera/jre/lib/security/{{ item }}
+  with_items:
+      - local_policy.jar
+      - US_export_policy.jar
+
+- name: Copy mysql-connector.jar
+  synchronize: src=mysql-connector-java-5.1.34-bin.jar dest=/usr/share/java/mysql-connector-java.jar
+
+- name: Create hadoop Group
+  group: name={{ item.key }} gid={{ item.value.gid }} state=present
+  with_dict: "{{ hadoop_groups }}"
+
+- name: Create hadoop user
+  user: name={{ item.key }} uid={{ item.value.uid }} groups={{ item.value.main_groups | join(',') }} shell=/sbin/nologin createhome=no expires=32527267199
+  with_dict: "{{ hadoop_users }}"
+
+- include: kerberos.yml
+- include: cgroup.yml

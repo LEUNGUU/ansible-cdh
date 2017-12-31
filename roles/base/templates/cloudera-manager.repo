@@ -1,0 +1,6 @@
+[cloudera-manager]
+# Packages for Cloudera Manager, Version 5, on RedHat or CentOS 6 x86_64              
+name=Cloudera Manager
+baseurl=http://archive.cloudera.com/cloudera-manager-{{ version }}/RPMS
+gpgkey = http://archive.cloudera.com/RPM-GPG-KEY-cloudera
+gpgcheck = 1

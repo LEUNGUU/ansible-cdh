@@ -1,0 +1,12 @@
+hbase_log_dir: /data/logs/hbase
+hm_handler_count: 20
+hm_executor_openregion_t: 5
+hm_executor_closeregion_t: 5
+hm_executor_serverops_t: 5
+hrs_handler_count: 30
+hrs_metahandler_count: 10
+hrs_regionSplitLimit: 2147483647
+hrs_memstore_flush_size: 134217728
+hrs_hlog_block_size: 134217728
+hrs_hregion_max_filesize: 10737418240
+

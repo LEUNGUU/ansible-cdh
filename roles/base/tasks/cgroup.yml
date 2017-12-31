@@ -1,0 +1,12 @@
+- name: Install cgroup config
+  yum: name={{ item }} state=latest
+  with_items:
+      - libcgroup
+      - chkconfig
+
+- name: Deploy cgcofing file
+  synchronize: src=cgconfig_cluster.conf dest=/etc/cgconfig.conf
+
+- name: Deploy cgrule file
+  synchronize: src=cgrule_cluster.conf dest=/etc/cgrules.conf
+

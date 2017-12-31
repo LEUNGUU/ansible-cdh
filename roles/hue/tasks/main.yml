@@ -1,0 +1,8 @@
+- name: install hue rpm
+  yum: name=hue state=latest
+
+- name: deploy keytab files
+  copy: src=hue_{{ ansible_nodename }}.keytab dest=/etc/hue/conf/hue.keytab owner=hue group=hue mode=0400
+
+- name: hue config files
+  template: src=hue.ini dest=/etc/hue/conf/hue.ini

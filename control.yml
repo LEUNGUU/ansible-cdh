@@ -1,0 +1,88 @@
+---
+#- hosts: all
+#  accelerate: true
+#  accelerate_port: 50000
+
+- hosts: base
+  remote_user: root
+  roles:
+  - base 
+  tags:
+   - base
+
+- hosts: client 
+  remote_user: root
+  roles:
+  - client
+  tags:
+  - client
+
+- hosts: zookeeper 
+  remote_user: root
+  roles:
+  - zookeeper
+  tags:
+  - zookeeper
+
+- hosts: hadoop-master
+  remote_user: root
+  roles:
+  - hadoop-master
+  tags:
+  - hadoop-master
+
+- hosts: hbase-master
+  remote_user: root
+  roles:
+  - hbase-master
+  tags:
+  - hbase-master
+
+- hosts: hadoop-slave 
+  remote_user: root
+  roles:
+  - hadoop-slave
+  tags:
+  - hadoop-slave
+
+- hosts: hbase-slave 
+  remote_user: root
+  roles:
+  - hbase-slave
+  tags:
+  - hbase-slave
+
+- hosts: jhs-httpfs 
+  remote_user: root
+  roles:
+  - jhs-httpfs
+  tags:
+  - jhs-httpfs
+
+- hosts: hbase-thriftserver 
+  remote_user: root
+  roles:
+  - thriftserver
+  tags:
+  - thriftserver
+
+- hosts: hive 
+  remote_user: root
+  roles:
+  - hive 
+  tags:
+  - hive
+
+- hosts: spark 
+  remote_user: root
+  roles:
+  - spark
+  tags:
+  - spark
+
+- hosts: hue
+  remote_user: root
+  roles:
+  - hue
+  tags:
+  - hue

@@ -1,0 +1,32 @@
+- name: install hbase master
+  yum: name=hbase-master state=latest
+ 
+- name: hbase config.dist
+  file: name=/etc/hbase/conf.dist state=directory
+  ignore_errors: True
+
+- name: make hbase config symlink
+  file: src=/etc/hbase/conf.dist dest=/etc/alternatives/hbase-conf state=link
+  ignore_errors: True
+
+- name: make hbase conf symlink
+  file: src=/etc/alternatives/hbase-conf dest=/etc/hbase/conf state=link
+  ignore_errors: True
+
+- name: make log dir
+  file: name={{ hbase_log_dir }} state=directory owner=hbase group=hbase
+
+- name: deploy hbase cgconfig
+  template: src=cgconfig_hbase.conf dest=/etc/cgconfig.d/hbase.conf
+
+- name: deploy keytab files
+  copy: src=hbase_{{ ansible_nodename }}.keytab dest=/etc/hbase/conf/hbase.keytab owner=hbase group=hbase mode=0400
+
+- name: deploy config files
+  template: src={{ item }} dest=/etc/hbase/conf/{{ item }}
+  with_items:
+      - hbase-site.xml
+      - hbase-env.sh
+      - log4j.properties
+      - hbase-policy.xml
+      - zk-jaas.conf

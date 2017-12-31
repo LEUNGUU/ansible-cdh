@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property>
+    <name>yarn.acl.enable</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.admin.acl</name>
+    <value>yarn,ops_dev</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.automatic-failover.embedded</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.recovery.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.zk-address</name>
+    <value>{% for zk in groups['zookeeper'] %}{{ zk }}:2181{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.store.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+  </property>
+  <property>
+    <name>yarn.client.failover-sleep-base-ms</name>
+    <value>100</value>
+  </property>
+  <property>
+    <name>yarn.client.failover-sleep-max-ms</name>
+    <value>2000</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.cluster-id</name>
+    <value>{{ yarn_name }}</value>
+  </property>
+  <!--<property>
+    <name>yarn.resourcemanager.zk-auth</name>
+    <value>digest:yarn:JCwKowDIfMexehK7jghDXY2baOmmOC</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.zk-acl</name>
+    <value>digest:yarn:AvxM5RC2lA/aSFoan2+8+P01HEQ=:rwcda</value>
+  </property>-->
+  <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.log-aggregation.retain-seconds</name>
+    <value>604800</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.ha.rm-ids</name>
+    <value>{% for rm in groups['hadoop-master'] %}{{ hostvars[rm]['rm_id'] }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+  {%- for rm in groups['hadoop-master'] %}
+  <property>
+    <name>yarn.resourcemanager.address.{{ hostvars[rm]['rm_id'] }}</name>
+    <value>{{ rm }}:8032</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.address.{{ hostvars[rm]['rm_id'] }}</name>
+    <value>{{ rm }}:8030</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address.{{ hostvars[rm]['rm_id'] }}</name>
+    <value>{{ rm }}:8031</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.admin.address.{{ hostvars[rm]['rm_id'] }}</name>
+    <value>{{ rm }}:8033</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.address.{{ hostvars[rm]['rm_id'] }}</name>
+    <value>{{ rm }}:8088</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.https.address.{{ hostvars[rm]['rm_id'] }}</name>
+    <value>{{ rm }}:8090</value>
+  </property>
+  {%- endfor %}
+  <property>
+    <name>yarn.resourcemanager.client.thread-count</name>
+    <value>{{ rm_client_thread_count }}</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.client.thread-count</name>
+    <value>{{ rm_client_scheduler_thread_count }}</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.admin.client.thread-count</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.container-tokens.master-key-rolling-interval-secs</name>
+    <value>3600</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>0</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.increment-allocation-mb</name>
+    <value>512</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>{{ yarn_scheduler_maximum_allocation_mb }}</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-vcores</name>
+    <value>0</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.increment-allocation-vcores</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-vcores</name>
+    <value>{{ yarn_scheduler_maximum_allocation_vcores }}</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.amliveliness-monitor.interval-ms</name>
+    <value>1000</value>
+  </property>
+  <property>
+    <name>yarn.am.liveness-monitor.expiry-interval-ms</name>
+    <value>300000</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.am.max-retries</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.container.liveness-monitor.interval-ms</name>
+    <value>600000</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.nm.liveness-monitor.interval-ms</name>
+    <value>1000</value>
+  </property>
+  <property>
+    <name>yarn.nm.liveness-monitor.expiry-interval-ms</name>
+    <value>600000</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.client.thread-count</name>
+    <value>50</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.fair.allow-undeclared-pools</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.fair.user-as-default-queue</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.fair.preemption</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.fair.sizebasedweight</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.fair.assignmultiple</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.fair.max.assign</name>
+    <value>4</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.job.reduce.preemption.limit</name>
+    <value>0.5</value>
+  </property>
+  <property>
+    <name>yarn.application.classpath</name>
+    <value>$HADOOP_CLIENT_CONF_DIR,$HADOOP_CONF_DIR,$HADOOP_COMMON_HOME/*,$HADOOP_COMMON_HOME/lib/*,$HADOOP_HDFS_HOME/*,$HADOOP_HDFS_HOME/lib/*,$HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*</value>
+  </property>
+  <!--<property>
+    <name>yarn.http.policy</name>
+    <value>HTTPS_ONLY</value>
+  </property>-->
+  <property>
+    <name>yarn.resourcemanager.keytab</name>
+    <value>/etc/hadoop/conf/yarn.keytab</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.principal</name>
+    <value>yarn/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.keytab</name>
+    <value>/etc/hadoop/conf/yarn.keytab</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.principal</name>
+    <value>yarn/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <!--<property>
+    <name>yarn.resourcemanager.principal</name>
+    <value>yarn/_HOST@NM-CLOUD.INTERNAL</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.spnego-principal</name>
+    <value>HTTP/_HOST@NM-CLOUD.INTERNAL</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.keytab</name>
+    <value>yarn.keytab</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.webapp.spnego-keytab-file</name>
+    <value>yarn.keytab</value>
+  </property>-->
+</configuration>

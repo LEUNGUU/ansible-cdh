@@ -1,0 +1,10 @@
+env: test
+cluster_domain: cloud.internal
+secure_mode: kerberos
+log_level: WARN
+version: 5.7.2
+cdh_version: 5.7.2
+hive_version: 1.1.0
+hbase_version: 1.2.0
+hdfs_name: 21cnCDHTest
+yarn_name: yarnRM

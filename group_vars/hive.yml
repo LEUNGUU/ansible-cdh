@@ -1,0 +1,14 @@
+warehouse_dir: /hive_warehouse
+hive_log_dir: /data/logs/hive
+hive_config_dir: /etc/hive/conf
+max_reducers: 50
+metastore_host: cdh-test-client.cloud.internal
+metastore_port: 3306
+metastore_db_name: hivedb
+metastore_db_user: hive
+metastore_db_pwd: "hive123#$%"
+stat_host: cdh-test-client.cloud.internal
+stat_port: 3306
+metastore_servers:
+       - cdh-test-client.cloud.internal
+

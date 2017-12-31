@@ -1,0 +1,77 @@
+- name: hadoop_log_dir
+  file: name={{ hdfs_log_dir }} state=directory owner=hdfs group=hadoop
+
+- name: mapred_log_dir
+  file: name={{ mapred_log_dir }} state=directory owner=mapred group=hadoop
+
+- name: yarn_log_dir
+  file: name={{ yarn_log_dir }} state=directory owner=yarn group=hadoop
+
+- name: install journalnode
+  yum: name=hadoop-hdfs-journalnode state=latest
+
+- name: make jn data dir
+  file: name={{ journalnodes_data_dir }} state=directory owner=hdfs group=hadoop
+
+- name: make hadoop config.dist
+  file: name=/etc/hadoop/conf.dist state=directory
+  ignore_errors: True
+
+- name: make hadoop config symlink
+  file: src=/etc/hadoop/conf.dist dest=/etc/alternatives/hadoop-conf state=link
+
+- name: make hadoop conf symlink
+  file: src=/etc/alternatives/hadoop-conf dest={{ hadoop_config_dir }} state=link
+
+- name: install dn rpm
+  yum: name=hadoop-hdfs-datanode state=latest
+
+- name: make dn socket
+  file: name=/var/run/hdfs-sockets state=directory owner=hdfs group=hadoop mode=0755
+
+- name: make dn data dir
+  file: name={{ item }} state=directory owner=hdfs group=hadoop mode=0755
+  with_items:
+      - "{{ dn_data_dirs }}"
+
+- name: install nm rpm
+  yum: name=hadoop-yarn-nodemanager state=latest
+
+- name: make nm data dir
+  file: name={{ item }} state=directory owner=yarn group=hadoop mode=0755
+  with_items:
+      - "{{ nm_data_dirs }}"
+
+- name: deploy hadoop cgroup
+  template: src=cgconfig_hadoop.conf dest=/etc/cgconfig.d/hadoop.conf
+
+- name: deploy hadoop xml_config
+  template: src={{ item }} dest={{ hadoop_config_dir }}/{{ item }}
+  with_items: 
+      - core-site.xml
+      - hdfs-site.xml
+      - yarn-site.xml
+      - mapred-site.xml
+      - hadoop-policy.xml
+      - ssl-server.xml
+      - ssl-client.xml
+      - hadoop-env.sh
+      - mapred-env.sh
+      - yarn-env.sh
+      - log4j.properties
+      - cdh_topology.txt
+  ignore_errors: True
+      
+- name: datanode default
+  template: src=hadoop-hdfs-datanode-default dest=/etc/default/hadoop-hdfs-datanode
+
+- name: container-exec.cfg
+  synchronize: src=container-executor.cfg dest={{ hadoop_config_dir }}/container-executor.cfg
+
+- name: Deploy keytab files
+  copy: src={{ item }}_{{ ansible_nodename }}.keytab dest={{ hadoop_config_dir }}/{{ item }}.keytab owner={{ item }} group=hadoop mode=0400
+  with_items:
+      - hdfs
+      - yarn
+      - mapred
+

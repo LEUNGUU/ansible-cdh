@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<allocations>
+  <queue name="root">
+    <aclAdministerApps>yarn,ops_dev</aclAdministerApps>
+    <aclSubmitApps>hadoop_dev</aclSubmitApps>
+<!--    <minResources>184320 mb, 80 vcores</minResources>
+    <maxResources>245760 mb, 100 vcores</maxResources>-->
+    <queue name="default">
+      <minResources>15360 mb, 5 vcores</minResources>
+      <maxResources>40960 mb, 30 vcores</maxResources>
+      <aclSubmitApps>*</aclSubmitApps>
+      <weight>1.0</weight>
+      <maxRunningApps>5</maxRunningApps>
+      <minSharePreemptionTimeout>600</minSharePreemptionTimeout>
+    </queue>
+    <queue name="stat">
+      <minResources>20480 mb, 20 vcores</minResources>
+      <maxResources>81920 mb, 50 vcores</maxResources>
+      <aclSubmitApps>hadoop_dev,ops_dev,flow_dev,stu1_dev,stu2_dev</aclSubmitApps>
+      <weight>2.0</weight>
+      <maxRunningApps>20</maxRunningApps>
+      <minSharePreemptionTimeout>60</minSharePreemptionTimeout>
+    </queue>
+    <!--<queue name="dev">
+      <minResources>10240 mb, 5 vcores</minResources>
+      <maxResources>51200 mb, 25 vcores</maxResources>
+      <maxRunningApps>5</maxRunningApps>
+      <minSharePreemptionTimeout>300</minSharePreemptionTimeout>
+      <aclSubmitApps>hive_stat</aclSubmitApps>
+      <aclAdministerApps>hadoop_dev</aclAdministerApps>
+    </queue>-->
+  </queue>
+  <user name="hadoop_dev">
+    <maxRunningApps>15</maxRunningApps>
+  </user>
+  <user name="flow_dev">
+    <maxRunningApps>10</maxRunningApps>
+  </user>
+  <userMaxAppsDefault>2</userMaxAppsDefault>
+  <fairSharePreemptionTimeout>600</fairSharePreemptionTimeout>
+  <queuePlacementPolicy>
+    <rule name="specified" create="false"/>
+    <rule name="default" />
+  </queuePlacementPolicy>
+</allocations>

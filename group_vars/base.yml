@@ -1,0 +1,37 @@
+hadoop_groups:
+    client_user:
+          gid: 580
+    hadoop_dev:
+          gid: 1105
+    ops_dev:
+          gid: 1101
+    acc_hbase:
+          gid: 1102
+    hbase_ana:
+          gid: 1115
+hadoop_users:
+    hadoop_dev:
+        uid: 1105
+        gid: 1105
+        login: "True"
+        main_groups:
+          - client_user
+          - yarn
+          - hadoop
+    hbase_ana:
+        uid: 1115
+        gid: 1115
+        login: "True"
+        main_groups:
+          - client_user
+          - yarn
+          - hadoop
+    ops_dev:
+        uid: 1101
+        gid: 1101
+        login: "True"
+        main_groups:
+          - hbase
+          - yarn
+          - hadoop
+

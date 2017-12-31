@@ -1,0 +1,30 @@
+- name: install hive rpm
+  yum: name={{ item }} state=latest
+  with_items:
+      - hive-jdbc
+      - hive-hbase
+      - hive-metastore
+      - hive-server2
+
+- name: hive config dir symlink
+  file: src=/etc/hive/conf.dist dest=/etc/alternatives/hive-conf state=link 
+
+- name: hive jdbc symlink
+  file: src=/usr/share/java/mysql-connector-java.jar dest=/usr/lib/hive/lib/mysql-connector-java.jar state=link
+
+- name: hive conf dir
+  file: src=/etc/alternatives/hive-conf dest={{ hive_config_dir }} state=link 
+
+- name: hive log dir
+  file: name={{ hive_log_dir }} state=directory owner=hive group=hive mode=1777
+
+- name: deploy keytab files
+  copy: src=hive_{{ ansible_nodename }}.keytab dest={{ hive_config_dir }}/hive.keytab owner=hive group=hive mode=0400
+
+- name: deploy config files
+  template: src={{ item }} dest={{ hive_config_dir }}/{{ item }} 
+  with_items: 
+      - hive-site.xml
+      - hive-env.sh
+      - hive-log4j.properties
+      - zk-jaas.conf

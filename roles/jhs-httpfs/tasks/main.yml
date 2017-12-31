@@ -1,0 +1,77 @@
+- name: hadoop_log_dir
+  file: name={{ hdfs_log_dir }} state=directory owner=hdfs group=hadoop
+
+- name: mapred_log_dir
+  file: name={{ mapred_log_dir }} state=directory owner=mapred group=hadoop
+
+- name: yarn_log_dir
+  file: name={{ yarn_log_dir }} state=directory owner=yarn group=hadoop
+
+- name: install httpfs rpm
+  yum: name=hadoop-httpfs state=latest
+
+- name: make httpfs log dir
+  file: name={{ httpfs_logs_dir }} state=directory owner=httpfs group=httpfs
+
+- name: make httpfs temp dir
+  file: name={{ httpfs_temp_dir }} state=directory owner=httpfs group=httpfs
+
+- name: make hadoop config.dist
+  file: name=/etc/hadoop/conf.dist state=directory
+  ignore_errors: True
+
+- name: make hadoop config symlink
+  file: src=/etc/hadoop/conf.dist dest=/etc/alternatives/hadoop-conf state=link
+
+- name: make hadoop conf symlink
+  file: src=/etc/alternatives/hadoop-conf dest={{ hadoop_config_dir }} state=link
+ 
+- name: deploy hadoop cgroup
+  template: src=cgconfig_hadoop.conf dest=/etc/cgconfig.d/hadoop.conf
+
+- name: install mapred-jobhistory
+  yum: name=hadoop-mapreduce-historyserver state=latest
+
+- name: deploy hadoop xml_config
+  template: src={{ item }} dest={{ hadoop_config_dir }}/{{ item }}
+  with_items: 
+      - core-site.xml
+      - hdfs-site.xml
+      - yarn-site.xml
+      - mapred-site.xml
+      - hadoop-policy.xml
+      - ssl-server.xml
+      - ssl-client.xml
+      - hadoop-env.sh
+      - mapred-env.sh
+      - yarn-env.sh
+      - log4j.properties
+      - cdh_topology.txt
+  ignore_errors: True
+
+- name: Deploy keytab files
+  copy: src={{ item }}_{{ ansible_nodename }}.keytab dest={{ hadoop_config_dir }}/{{ item }}.keytab owner={{ item }} group=hadoop mode=0400
+  with_items:
+      - hdfs
+      - yarn
+      - mapred
+      
+- name: make httpfs config dir
+  file: name=/etc/hadoop-httpfs/conf.empty state=directory 
+
+- name: make config dir symlink
+  file: src=/etc/hadoop-httpfs/conf.empty dest=/etc/alternatives/hadoop-httpfs-conf state=link
+
+- name: make config dir symlink2
+  file: src=/etc/alternatives/hadoop-httpfs-conf dest=/etc/hadoop-httpfs/conf state=link 
+
+- name: deploy httpfs config
+  template: src={{ item }} dest=/etc/hadoop-httpfs/conf/{{ item }}
+  with_items:
+      - httpfs-site.xml
+      - httpfs-log4j.properties
+      - httpfs-env.sh
+  ignore_errors: True
+
+- name: deploy httpfs keytab
+  copy: src=httpfs_{{ ansible_nodename }}.keytab dest=/etc/hadoop-httpfs/conf/httpfs-http.keytab owner=httpfs group=hadoop mode=0400

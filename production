@@ -1,0 +1,54 @@
+[base]
+cdh-test-03.cloud.internal
+cdh-test-04.cloud.internal
+cdh-test-05.cloud.internal
+cdh-test-02.cloud.internal
+cdh-test-01.cloud.internal
+cdh-test-client.cloud.internal
+
+[hadoop-master]
+cdh-test-01.cloud.internal  nn_id=nn1 rm_id=rm1
+cdh-test-02.cloud.internal  nn_id=nn2 rm_id=rm2
+
+[hbase-master]
+cdh-test-01.cloud.internal  nn_id=nn1 rm_id=rm1
+cdh-test-02.cloud.internal  nn_id=nn2 rm_id=rm2
+
+[hadoop-slave]
+cdh-test-03.cloud.internal
+cdh-test-04.cloud.internal
+cdh-test-05.cloud.internal
+
+[hbase-slave]
+cdh-test-03.cloud.internal
+cdh-test-04.cloud.internal
+cdh-test-05.cloud.internal
+
+[client]
+cdh-test-client.cloud.internal
+
+[jhs-httpfs]
+cdh-test-client.cloud.internal
+
+[hbase-thriftserver]
+cdh-test-client.cloud.internal
+
+[hive]
+cdh-test-client.cloud.internal
+
+[spark]
+cdh-test-client.cloud.internal
+
+[hue]
+cdh-test-client.cloud.internal
+
+[zookeeper]
+cdh-test-03.cloud.internal zk_id=1
+cdh-test-04.cloud.internal zk_id=2
+cdh-test-05.cloud.internal zk_id=3
+
+[journalnode]
+cdh-test-03.cloud.internal 
+cdh-test-04.cloud.internal 
+cdh-test-05.cloud.internal 
+

@@ -1,0 +1,20 @@
+- name: Install hadoop base pkg
+  yum: name={{ item }} state=latest
+  with_items:
+      - hadoop-client
+      - hadoop-hdfs-fuse
+
+- name: Create hadoop user
+  user: name={{ item.key }} uid={{ item.value.uid }} groups={{ item.value.main_groups | join(',') }} shell=/bin/bash createhome=yes expires=32527267199
+  with_dict: "{{ hadoop_users }}"
+
+- name: Deploy hadoop keytab
+  synchronize: src={{ item.key }}.keytab dest=/home/{{ item.key }}.keytab mode=0400
+  with_dict: "{{ hadoop_users }}"
+  ignore_errors: True
+
+- name: Deploy cgconfig file
+  synchronize: src=cgconfig_cluster.conf dest=/etc/cgconfig.conf
+
+- name: Deploy cgrule file
+  synchronize: src=cgrule_cluster.conf dest=/etc/cgrules.conf

@@ -1,0 +1,27 @@
+hadoop_config_dir: /etc/hadoop/conf
+nn_handler_count: 120
+nn_service_handler_count: 120
+yarn_am_memory: 1024
+yarn_am_vcpu: 1
+mr_map_java_opts: "-Djava.net.preferIPv4Stack=true -Xmx256m"
+mr_reduce_java_opts: "-Djava.net.preferIPv4Stack=true -Xmx512m"
+mr_am_java_opts: "-Djava.net.preferIPv4Stack=true -Xmx384m"
+mr_map_memory: 512
+mr_map_vcpu: 1
+mr_reduce_memory: 1024
+mr_reduce_vcpu: 1
+mr_shuffle_max_connections: 10
+mr_reduce_shuffle_memory_limit: 0.15
+rm_max_completed_apps: 100
+rm_client_thread_count: 50
+rm_client_scheduler_thread_count: 50
+yarn_scheduler_maximum_allocation_mb: 4096
+yarn_scheduler_maximum_allocation_vcores: 4
+replications: 3
+trash_interval: 60
+hdfs_log_dir: /data/logs/hadoop-hdfs
+namenode_data_dir:
+        - /data/dfs/nn
+yarn_log_dir: /data/logs/hadoop-yarn
+mapred_log_dir: /data/logs/hadoop-mapred
+hadoop_mapred_jhs: cdh-test-client.cloud.internal

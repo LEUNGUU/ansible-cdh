@@ -1,0 +1,29 @@
+- name: Install zookeeper rpm
+  yum: name=zookeeper-server state=latest
+
+- name: Make zookeeper log dir
+  file: name={{ zk_log_dir }} state=directory owner=zookeeper group=zookeeper
+
+- name: Make zookeeper data dir
+  file: name={{ zk_data_dir }}/version-2 state=directory owner=zookeeper group=zookeeper
+
+- name: Make myid
+  template: src=myid dest={{ zk_data_dir }}/
+
+- name: Make config dir
+  file: name={{ zk_config_dir }} state=directory owner=zookeeper group=zookeeper
+  ignore_errors: True
+
+- name: Deploy zoo.cfg
+  template: src={{ item }} dest={{ zk_config_dir }}/{{ item }}
+  with_items:
+      - zoo.cfg
+      - log4j.properties
+      - jaas.conf
+
+- name: Deploy zookeeper keytab
+  copy: src=zookeeper_{{ ansible_nodename }}.keytab dest={{ zk_config_dir }}/zookeeper.keytab owner=zookeeper group=zookeeper mode=0400
+
+- name: Deploy zkEnv.sh 
+  template: src=zkEnv.sh dest=/usr/lib/zookeeper/bin/zkEnv.sh
+

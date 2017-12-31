@@ -1,0 +1,31 @@
+- name: install spark historyserver rpm
+  yum: name=spark-history-server state=latest
+
+- name: make spark log dir
+  file: name={{ spark_log_dir }} state=directory owner=spark group=spark mode=0755
+
+- name: spark local dir
+  file: name={{ spark_local_dir }} state=directory  mode=0777
+
+- name: deploy keytab files
+  copy: src=spark_{{ ansible_nodename }}.keytab dest=/etc/spark/conf/spark.keytab owner=spark group=spark mode=0400
+
+- name: spark conf.dist
+  file: name=/etc/spark/conf.dist state=directory mode=0755
+
+- name: spark conf symlink
+  file: src=/etc/spark/conf.dist dest=/etc/alternatives/spark-conf state=link
+ 
+- name: spark conf dir
+  file: src=/etc/alternatives/spark-conf dest={{ spark_conf_dir }} state=link
+
+- name: deploy config files
+  template: src={{ item }} dest={{ spark_conf_dir }}/{{ item }}
+  with_items:
+      - spark-defaults.conf
+      - log4j.properties
+      - fairscheduler.xml
+
+- name: spark-env files
+  template: src=spark-env.sh dest={{ spark_conf_dir }}/spark-env.sh mode=0755
+

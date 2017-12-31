@@ -1,0 +1,71 @@
+- name: hadoop_log_dir
+  file: name={{ hdfs_log_dir }} state=directory owner=hdfs group=hadoop
+
+- name: mapred_log_dir
+  file: name={{ mapred_log_dir }} state=directory owner=mapred group=hadoop
+
+- name: yarn_log_dir
+  file: name={{ yarn_log_dir }} state=directory owner=yarn group=hadoop
+
+- name: install namenode rpm
+  yum: name={{ item }} state=latest
+  with_items:
+      - hadoop-hdfs-namenode
+      - hadoop-hdfs-zkfc
+
+- name: make namenode data dir
+  file: name={{ item }} state=directory owner=hdfs group=hadoop
+  with_items:
+      - "{{ namenode_data_dir }}"
+
+- name: install resourcemanager rpm
+  yum: name=hadoop-yarn-resourcemanager state=latest
+
+- name: make hadoop config.dist
+  file: name=/etc/hadoop/conf.dist state=directory
+  ignore_errors: True
+
+- name: make hadoop config symlink
+  file: src=/etc/hadoop/conf.dist dest=/etc/alternatives/hadoop-conf state=link
+  ignore_errors: True
+
+- name: make hadoop conf symlink
+  file: src=/etc/alternatives/hadoop-conf dest={{ hadoop_config_dir }} state=link
+  ignore_errors: True
+
+- name: deploy host list
+  synchronize: src={{ item }} dest={{ hadoop_config_dir }}/{{ item }} 
+  with_items:
+      - dfs_hosts_allow.txt
+      - dfs_hosts_exclude.txt
+      - nodes_allow.txt
+      - nodes_exclude.txt
+      - fair-scheduler.xml
+
+- name: deploy hadoop xml_config
+  template: src={{ item }} dest={{ hadoop_config_dir }}/{{ item }}
+  with_items: 
+      - core-site.xml
+      - hdfs-site.xml
+      - yarn-site.xml
+      - mapred-site.xml
+      - hadoop-policy.xml
+      - ssl-server.xml
+      - ssl-client.xml
+      - hadoop-env.sh
+      - mapred-env.sh
+      - yarn-env.sh
+      - log4j.properties
+      - cdh_topology.txt
+  ignore_errors: True    
+
+- name: Deploy keytab files
+  copy: src={{ item }}_{{ ansible_nodename }}.keytab dest={{ hadoop_config_dir }}/{{ item }}.keytab owner={{ item }} group=hadoop mode=0400
+  with_items: 
+      - hdfs
+      - yarn
+      - mapred
+
+- name: deploy hadoop cgroup
+  template: src=cgconfig_hadoop.conf dest=/etc/cgconfig.d/hadoop.conf
+

@@ -1,0 +1,3 @@
+zk_config_dir: /etc/zookeeper/conf
+zk_data_dir: /data/zookeeper
+zk_log_dir: /data/logs/zookeeper

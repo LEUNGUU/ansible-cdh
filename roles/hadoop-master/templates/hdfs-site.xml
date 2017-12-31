@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property>
+    <name>dfs.nameservices</name>
+    <value>{{ hdfs_name }}</value>
+  </property>
+  <property>
+    <name>dfs.client.failover.proxy.provider.{{ hdfs_name }}</name>
+    <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+  </property>
+  <property>
+    <name>dfs.ha.automatic-failover.enabled.{{ hdfs_name }}</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>ha.zookeeper.quorum</name>
+    <value>{% for host in groups['zookeeper'] %}{{ host }}:2181{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+  <property>
+    <name>dfs.ha.namenodes.{{ hdfs_name }}</name>
+    <value>{% for nn in groups['hadoop-master'] %}{{ hostvars[nn]['nn_id'] }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+  {% for nn in groups['hadoop-master'] %}
+  <property>
+    <name>dfs.namenode.rpc-address.{{ hdfs_name }}.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>{{ nn }}:8020</value>
+  </property>
+  <property>
+    <name>dfs.namenode.servicerpc-address.{{ hdfs_name }}.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>{{ nn }}:8022</value>
+  </property>
+  <property>
+    <name>dfs.namenode.http-address.{{ hdfs_name }}.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>{{ nn }}:50070</value>
+  </property>
+  <property>
+    <name>dfs.namenode.https-address.{{ hdfs_name }}.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>{{ nn }}:50470</value>
+  </property>
+  <property>
+    <name>dfs.ha.fencing.cloudera_manager_agent.url.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>http://{{ nn }}:9000/fence/fence?name=hdfs-NAMENODE&amp;host={{ nn }}&amp;port=8020</value>
+  </property>
+  <property>
+    <name>dfs.namenode.name.dir.{{ hdfs_name }}.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>{% for dfs_name_dir in namenode_data_dir %}file://{{ dfs_name_dir }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+  <property>
+    <name>dfs.namenode.shared.edits.dir.{{ hdfs_name }}.{{ hostvars[nn]['nn_id'] }}</name>
+    <value>qjournal://{% for jn in groups['journalnode'] %}{{ jn }}:8485{% if not loop.last%};{% endif %}{% endfor %}/{{ hdfs_name }}</value>
+  </property>
+  {% endfor %}
+  <property>
+    <name>dfs.ha.fencing.methods</name>
+    <value>shell(true)</value>
+  </property>
+  <property>
+    <name>dfs.ha.fencing.ssh.connect-timeout</name>
+    <value>30000</value>
+  </property>
+  <property>
+    <name>dfs.hosts</name>
+    <value>{{ hadoop_config_dir }}/dfs_hosts_allow.txt</value>
+  </property>
+  <property>
+    <name>dfs.hosts.exclude</name>
+    <value>{{ hadoop_config_dir }}/dfs_hosts_exclude.txt</value>
+  </property>
+  <property>
+    <name>dfs.permissions.superusergroup</name>
+    <value>supergroup</value>
+  </property>
+  <property>
+    <name>dfs.permissions</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.cluster.administrators</name>
+    <value>hdfs</value>
+  </property>
+  <property>
+    <name>dfs.namenode.replication.min</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>dfs.replication.max</name>
+    <value>16</value>
+  </property>
+  <property>
+    <name>dfs.namenode.handler.count</name>
+    <value>{{ nn_handler_count }}</value>
+  </property>
+  <property>
+    <name>dfs.namenode.service.handler.count</name>
+    <value>{{ nn_service_handler_count }}</value>
+  </property>
+  <property>
+    <name>dfs.namenode.name.dir.restore</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>dfs.namenode.safemode.threshold-pct</name>
+    <value>0.999</value>
+  </property>
+  <property>
+    <name>dfs.namenode.invalidate.work.pct.per.iteration</name>
+    <value>0.32</value>
+  </property>
+  <property>
+    <name>dfs.namenode.replication.work.multiplier.per.iteration</name>
+    <value>2</value>
+  </property>
+  <property>
+    <name>dfs.safemode.min.datanodes</name>
+    <value>0</value>
+  </property>
+  <property>
+    <name>dfs.namenode.safemode.extension</name>
+    <value>30000</value>
+  </property>
+  <property>
+    <name>dfs.namenode.acls.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.client.read.shortcircuit</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.domain.socket.path</name>
+    <value>/var/run/hdfs-sockets/dn</value>
+  </property>
+  <property>
+    <name>dfs.datanode.hdfs-blocks-metadata.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.encrypt.data.transfer</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>dfs.encrypt.data.transfer.algorithm</name>
+    <value>rc4</value>
+  </property>
+  <property>
+    <name>dfs.replication</name>
+    <value>{{ replications }}</value>
+  </property>
+  <property>
+    <name>dfs.blocksize</name>
+    <value>134217728</value>
+  </property>
+  <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>fs.permissions.umask-mode</name>
+    <value>022</value>
+  </property>
+  <property>
+    <name>dfs.thrift.threads.max</name>
+    <value>20</value>
+  </property>
+  <property>
+    <name>dfs.thrift.threads.min</name>
+    <value>10</value>
+  </property>
+  <property>
+    <name>dfs.thrift.timeout</name>
+    <value>60</value>
+  </property>
+  <property>
+    <name>dfs.webhdfs.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.client.slow.io.warning.threshold.ms</name>
+    <value>60000</value>
+  </property>
+  <property>
+    <name>dfs.web.authentication.kerberos.principal</name>
+    <value>HTTP/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <property>
+    <name>dfs.web.authentication.kerberos.keytab</name>
+    <value>/etc/hadoop/conf/hdfs.keytab</value>
+  </property>
+  <property>
+    <name>dfs.block.access.token.enable</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.journalnode.keytab.file</name>
+    <value>/etc/hadoop/conf/hdfs.keytab</value>
+  </property>
+  <property>
+    <name>dfs.journalnode.kerberos.principal</name>
+    <value>hdfs/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <property>
+    <name>dfs.journalnode.kerberos.internal.spnego.principal</name>
+    <value>HTTP/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <property>
+    <name>dfs.namenode.keytab.file</name>
+    <value>/etc/hadoop/conf/hdfs.keytab</value>
+  </property>
+  <property>
+    <name>dfs.namenode.kerberos.principal</name>
+    <value>hdfs/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <property>
+    <name>dfs.namenode.kerberos.internal.spnego.principal</name>
+    <value>HTTP/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <property>
+    <name>dfs.datanode.keytab.file</name>
+    <value>/etc/hadoop/conf/hdfs.keytab</value>
+  </property>
+  <property>
+    <name>dfs.datanode.kerberos.principal</name>
+    <value>hdfs/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+</configuration>

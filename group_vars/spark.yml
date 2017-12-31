@@ -1,0 +1,5 @@
+spark_conf_dir: /etc/spark/conf
+spark_log_dir: /data/logs/spark
+spark_local_dir: /data/spark_tmp
+spark_event_log: /user/spark/applicationHistory
+spark_history_server: cdh-test-client.cloud.internal

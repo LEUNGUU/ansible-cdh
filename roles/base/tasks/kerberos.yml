@@ -1,0 +1,12 @@
+- name: Install krb5 rpms
+  yum: name={{ item }} state=latest
+  with_items:
+      - krb5-workstation
+      - pam_krb5
+      - krb5-devel
+      - krb5-libs
+      - krb5-auth-dialog
+
+- name: Deploy krb client config
+  template: src=krb5.conf dest=/etc/krb5.conf
+

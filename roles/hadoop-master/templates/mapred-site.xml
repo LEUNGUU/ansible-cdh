@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property>
+    <name>mapreduce.job.split.metainfo.maxsize</name>
+    <value>10000000</value>
+  </property>
+  <property>
+    <name>mapreduce.job.counters.max</name>
+    <value>120</value>
+  </property>
+  <property>
+    <name>mapreduce.map.output.compress.codec</name>
+    <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+  </property>
+  <property>
+    <name>mapreduce.map.output.compress</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>mapreduce.task.io.sort.mb</name>
+    <value>32</value>
+    <!-->merge时缓冲区所占用内存大小</-->
+  </property>
+  <property>
+    <name>mapreduce.task.io.sort.factor</name>
+    <value>10</value>
+    <!-->每次merge的文件个数，关系到需要merge次数的参数，默认为100</-->
+  </property>
+  <property>
+    <name>mapreduce.map.sort.spill.percent</name>
+    <value>0.8</value>
+    <!-->序列化缓冲区的软限制</-->
+  </property>
+  <property>
+    <name>mapreduce.reduce.shuffle.parallelcopies</name>
+    <value>10</value>
+    <!-->reducer不会等到所有的mapper执行完毕再去拉数据，而是在mappertask完成一定比例后就会开始fetch，下面先列出一些fetch阶段的重要参数,上面参数的意思是同时创建的fetch线程个数</-->
+  </property>
+  <property>
+    <name>mapreduce.job.reduce.slowstart.completedmaps</name>
+    <value>0.8</value>
+    <!-->在maptask完成了一定百分比后将触发fetch，默认为0.05</-->
+  </property>
+  <property>
+    <name>mapreduce.reduce.shuffle.memory.limit.percent</name>
+    <value>{{ mr_reduce_shuffle_memory_limit }}</value>
+    <!-->每个fetch取到的输出的大小能够占的内存比的大小。默认是0.25。因此实际每个fetcher的输出能放在内存的大小是reducer的java heap size*0.9*0.25。 所以，如果我们想fetch不进磁盘的话，可以适当调大这个值。</-->
+  </property>
+  <property>
+    <name>mapreduce.task.timeout</name>
+    <value>600000</value>
+  </property>
+  <property>
+    <name>mapreduce.client.submit.file.replication</name>
+    <value>2</value>
+    <!-->client提交作业的副本数</-->
+  </property>
+  <property>
+    <name>mapreduce.job.reduces</name>
+    <value>1</value>
+    <!-->默认每个job的reduce个数</-->
+  </property>
+  <property>
+    <name>mapreduce.map.speculative</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>mapreduce.reduce.speculative</name>
+    <value>false</value>
+    <!-->关闭推测执行</-->
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>{{ hadoop_mapred_jhs }}:10020</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.webapp.address</name>
+    <value>{{ hadoop_mapred_jhs }}:19888</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.webapp.https.address</name>
+    <value>{{ hadoop_mapred_jhs }}:19890</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.keytab</name>
+    <value>/etc/hadoop/conf/mapred.keytab</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.principal</name>
+    <value>mapred/_HOST@{{ cluster_domain|upper() }}</value>
+  </property>
+  <!--<property>
+    <name>mapreduce.jobhistory.http.policy</name>
+    <value>HTTPS_ONLY</value>
+  </property>-->
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.staging-dir</name>
+    <value>/user</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.resource.mb</name>
+    <value>{{ yarn_am_memory }}</value>
+    <!-->每个任务AM申请的内存</-->
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.resource.cpu-vcores</name>
+    <value>{{ yarn_am_vcpu }}</value>
+    <!-->每个任务的AM申请的vcore</-->
+  </property>
+  <property>
+    <name>mapreduce.job.ubertask.enable</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.command-opts</name>
+    <value>{{ mr_am_java_opts }}</value>
+    <!-->每个任务的AM的jvm参数</-->
+  </property>
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value>{{ mr_map_java_opts }}</value>
+    <!-->map的jvm参数</-->
+  </property>
+  <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value>{{ mr_reduce_java_opts }}</value>
+    <!-->reduce的jvm参数</-->
+  </property>
+  <property>
+    <name>mapreduce.map.memory.mb</name>
+    <value>{{ mr_map_memory }}</value>
+    <!-->每个map向scheduler申请的内存</-->
+  </property>
+  <property>
+    <name>mapreduce.map.cpu.vcores</name>
+    <value>{{ mr_map_vcpu }}</value>
+    <!-->每个map向scheduler申请的vcore</-->
+  </property>
+  <property>
+    <name>mapreduce.reduce.memory.mb</name>
+    <value>{{ mr_reduce_memory }}</value>
+    <!-->每个reduce向scheduler申请的内存</-->
+  </property>
+  <property>
+    <name>mapreduce.reduce.cpu.vcores</name>
+    <value>{{ mr_reduce_vcpu }}</value>
+    <!-->每个reduce向scheduler申请的vcore</-->
+  </property>
+  <property>
+    <name>mapreduce.shuffle.max.connections</name>
+    <value>{{ mr_shuffle_max_connections }}</value>
+    <!-->mr shuffle的时候最大的连接数</-->
+  </property>
+  <property>
+    <name>mapreduce.application.classpath</name>
+    <value>$HADOOP_CONF_DIR, $HADOOP_COMMON_HOME/*, $HADOOP_COMMON_HOME/lib/*, $HADOOP_HDFS_HOME/*, $HADOOP_HDFS_HOME/lib/*, $HADOOP_MAPRED_HOME/*, $HADOOP_MAPRED_HOME/lib/*, $HADOOP_YARN_HOME/*, $HADOOP_YARN_HOME/lib/*</value>
+    <!-->MR应用的类路径</-->
+  </property>
+  <property>
+    <name>mapreduce.admin.user.env</name>
+    <value>LD_LIBRARY_PATH=$HADOOP_COMMON_HOME/lib/native:$JAVA_LIBRARY_PATH</value>
+    <!-->MR的额外的执行环境</-->
+  </property>
+  <property>
+    <name>mapred.child.env</name>
+    <value>LD_LIBRARY_PATH=$HADOOP_COMMON_HOME/lib/native:/usr/lib64:$JAVA_LIBRARY_PATH</value>
+    <!-->任务环境变量</-->
+  </property>
+  <!--<property>
+    <name>mapreduce.output.fileoutputformat.compress</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>mapreduce.output.fileoutputformat.compress.type</name>
+    <value>BLOCK</value>
+  </property>
+  <property>
+    <name>mapreduce.output.fileoutputformat.compress.codec</name>
+    <value>org.apache.hadoop.io.compress.DefaultCodec</value>
+  </property>
+  <property>
+    <name>zlib.compress.level</name>
+    <value>NO_COMPRESSION</value>
+  </property>
+  -->
+</configuration>

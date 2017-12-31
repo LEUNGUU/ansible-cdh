@@ -1,0 +1,9 @@
+hue-server: cdh-test-client.cloud.internal
+hue_db_name: hue
+hue_db_host: cdh-test-client.cloud.internal
+hue_db_port: 3306
+hue_db_user: hue
+hue_db_pwd: "hue!231@#"
+hadoop_httpfs: cdh-test-client.cloud.internal
+hadoop_mapred_jhs: cdh-test-client.cloud.internal
+spark_history_server: cdh-test-client.cloud.internal
