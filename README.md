@@ -1,4 +1,4 @@
 # ansible-cdh
-Using ansible to install CDH manually\n
-Welcome for cloning and enhancing!!\n
+Using ansible to install CDH manually  
+Welcome for cloning and enhancing!!  
 Thanks!
