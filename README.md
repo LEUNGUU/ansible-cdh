@@ -9,7 +9,7 @@
 
 * prepare your worker nodes and client node(Centos 6.x or rhel 6.x required)
 
-* set FQDN in your worker nodes and client node or use dns resolutions.
+* set FQDN in your worker nodes and client node or use dns resolutions
 
 * put your FQDN in inventory file(production)
 
